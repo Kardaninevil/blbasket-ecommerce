@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countries - BLbasket</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .countries-container {
+            padding: 100px 5% 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .countries-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .countries-header h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .countries-header p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .countries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .country-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .country-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .country-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .country-content {
+            padding: 1.5rem;
+        }
+
+        .country-content h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .country-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .explore-btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: #2E7D32;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .explore-btn:hover {
+            background-color: #1B5E20;
+        }
+
+        @media (max-width: 768px) {
+            .countries-container {
+                padding: 80px 5% 30px;
+            }
+
+            .countries-header h1 {
+                font-size: 2rem;
+            }
+
+            .countries-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="index.html">BLbasket</a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="shop.html">Shop</a>
+                <a href="countries.html" class="active">Countries</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="nav-right">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search products...">
+                    <button type="button"><i class="fas fa-search"></i></button>
+                </div>
+                <a href="cart.html" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="auth-buttons">
+                    <a href="login.html" class="login-btn">Login</a>
+                    <a href="signup.html" class="signup-btn">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="countries-container">
+        <div class="countries-header">
+            <h1>Explore Countries</h1>
+            <p>Discover unique products and artisans from different countries around the world.</p>
+        </div>
+
+        <div class="countries-grid">
+            <div class="country-card">
+                <div class="country-image" style="background-image: url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=500')"></div>
+                <div class="country-content">
+                    <h3>India</h3>
+                    <p class="country-description">Explore the rich cultural heritage of India through handcrafted textiles, spices, and traditional artifacts.</p>
+                    <a href="shop.html?country=india" class="explore-btn">Explore Products</a>
+                </div>
+            </div>
+
+            <div class="country-card">
+                <div class="country-image" style="background-image: url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=500')"></div>
+                <div class="country-content">
+                    <h3>Japan</h3>
+                    <p class="country-description">Discover the elegance of Japanese craftsmanship through ceramics, tea sets, and traditional arts.</p>
+                    <a href="shop.html?country=japan" class="explore-btn">Explore Products</a>
+                </div>
+            </div>
+
+            <div class="country-card">
+                <div class="country-image" style="background-image: url('https://images.unsplash.com/photo-1518638150340-f706e86654de?w=500')"></div>
+                <div class="country-content">
+                    <h3>Mexico</h3>
+                    <p class="country-description">Experience the vibrant culture of Mexico through colorful textiles, pottery, and traditional crafts.</p>
+                    <a href="shop.html?country=mexico" class="explore-btn">Explore Products</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About BLbasket</h3>
+                <p>Your one-stop destination for authentic products from around the world.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="countries.html">Countries</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Email: info@blbasket.com</p>
+                <p>Phone: +1 (555) 123-4567</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 BLbasket. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - BLbasket</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .shop-container {
+            padding: 100px 5% 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .shop-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .shop-header h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .shop-header p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .filter-section {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid #2E7D32;
+            background: none;
+            color: #2E7D32;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background-color: #2E7D32;
+            color: white;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .product-content {
+            padding: 1.5rem;
+        }
+
+        .product-content h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-country {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .product-price {
+            color: #2E7D32;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: #2E7D32;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
+
+        .add-to-cart:hover {
+            background-color: #1B5E20;
+        }
+
+        .no-products {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .shop-container {
+                padding: 80px 5% 30px;
+            }
+
+            .shop-header h1 {
+                font-size: 2rem;
+            }
+
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="index.html">BLbasket</a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="shop.html" class="active">Shop</a>
+                <a href="countries.html">Countries</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="nav-right">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search products...">
+                    <button type="button"><i class="fas fa-search"></i></button>
+                </div>
+                <a href="cart.html" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="auth-buttons">
+                    <a href="login.html" class="login-btn">Login</a>
+                    <a href="signup.html" class="signup-btn">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="shop-container">
+        <div class="shop-header">
+            <h1>Shop Local Products</h1>
+            <p>Discover authentic cultural items from artisans around the world.</p>
+        </div>
+
+        <div class="filter-section">
+            <button class="filter-btn active" data-country="all">All Products</button>
+            <button class="filter-btn" data-country="india">India</button>
+            <button class="filter-btn" data-country="japan">Japan</button>
+            <button class="filter-btn" data-country="mexico">Mexico</button>
+        </div>
+
+        <div class="products-grid" id="productsGrid">
+            <!-- India Product -->
+            <div class="product-card" data-country="india">
+                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1583391733956-3750b5a1d5e2?w=500')"></div>
+                <div class="product-content">
+                    <h3>Handwoven Silk Saree</h3>
+                    <div class="product-country">India</div>
+                    <p class="product-description">Traditional handwoven silk saree with intricate designs</p>
+                    <div class="product-price">$299.99</div>
+                    <button class="add-to-cart" onclick="addToCart(1)">Add to Cart</button>
+                </div>
+            </div>
+            
+            <!-- Japan Product -->
+            <div class="product-card" data-country="japan">
+                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1583391733956-3750b5a1d5e2?w=500')"></div>
+                <div class="product-content">
+                    <h3>Traditional Kimono Set</h3>
+                    <div class="product-country">Japan</div>
+                    <p class="product-description">Elegant traditional kimono with matching accessories</p>
+                    <div class="product-price">$249.99</div>
+                    <button class="add-to-cart" onclick="addToCart(2)">Add to Cart</button>
+                </div>
+            </div>
+            
+            <!-- Mexico Product -->
+            <div class="product-card" data-country="mexico">
+                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1615529328331-f8917597711f?w=500')"></div>
+                <div class="product-content">
+                    <h3>Talavera Pottery</h3>
+                    <div class="product-country">Mexico</div>
+                    <p class="product-description">Handcrafted Talavera pottery with vibrant Mexican designs</p>
+                    <div class="product-price">$79.99</div>
+                    <button class="add-to-cart" onclick="addToCart(3)">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About BLbasket</h3>
+                <p>Your one-stop destination for authentic products from around the world.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="countries.html">Countries</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Email: info@blbasket.com</p>
+                <p>Phone: +1 (555) 123-4567</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 BLbasket. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Simple event listeners for filter buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get selected country
+                    const selectedCountry = this.getAttribute('data-country');
+                    
+                    // Filter products
+                    filterProducts(selectedCountry);
+                });
+            });
+            
+            // Update cart count on page load
+            updateCartCount();
+            
+            // Show all products by default
+            filterProducts('all');
+        });
+        
+        // Function to filter products by country
+        function filterProducts(country) {
+            const productCards = document.querySelectorAll('.product-card');
+            
+            productCards.forEach(card => {
+                if (country === 'all' || card.getAttribute('data-country') === country) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        // Simple function to add product to cart
+        function addToCart(productId) {
+            // Get current cart or initialize empty array
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Product data
+            const products = [
+                {
+                    id: 1,
+                    name: "Handwoven Silk Saree",
+                    price: 299.99,
+                    image: "https://images.unsplash.com/photo-1583391733956-3750b5a1d5e2?w=500",
+                    quantity: 1
+                },
+                {
+                    id: 2,
+                    name: "Traditional Kimono Set",
+                    price: 249.99,
+                    image: "https://images.unsplash.com/photo-1583391733956-3750b5a1d5e2?w=500",
+                    quantity: 1
+                },
+                {
+                    id: 3,
+                    name: "Talavera Pottery",
+                    price: 79.99,
+                    image: "https://images.unsplash.com/photo-1615529328331-f8917597711f?w=500",
+                    quantity: 1
+                }
+            ];
+            
+            // Find the product
+            const product = products.find(p => p.id === productId);
+            
+            if (product) {
+                // Add the product to cart
+                cart.push(product);
+                
+                // Save cart to localStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
+                
+                // Update cart count
+                updateCartCount();
+                
+                // Show confirmation
+                alert(`${product.name} added to cart!`);
+            }
+        }
+        
+        // Update cart count in the navigation
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartCount = document.querySelector('.cart-count');
+            if (cartCount) {
+                cartCount.textContent = cart.length;
+            }
+        }
+    </script>
+</body>
+</html> 
