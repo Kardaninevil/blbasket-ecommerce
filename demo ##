@@ -1,0 +1,232 @@
+                  #server/models/Invoice.js
+
+  
+const mongoose = require('mongoose');
+const ItemSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  qty: { type: Number, required: true, default: 1 },
+  price: { type: Number, required: true, default: 0 },
+  tax: { type: Number, required: true, default: 0 },
+  subtotal: { type: Number, required: true },
+  taxAmount: { type: Number, required: true },
+  total: { type: Number, required: true }
+});
+const InvoiceSchema = new mongoose.Schema({
+  customerName: { type: String, required: true },
+  date: { type: Date, required: true },
+  currency: { type: String, required: true, default: 'INR' },
+  items: [ItemSchema],
+  subtotal: { type: Number, required: true },
+  taxTotal: { type: Number, required: true },
+  total: { type: Number, required: true },
+  createdAt: { type: Date, default: Date.now }
+});
+module.exports = mongoose.model('Invoice', InvoiceSchema);
+
+ 
+
+                 #backend/index.js
+  
+
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const Invoice = require('./models/Invoice');
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+const MONGO = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/invoices';
+mongoose.connect(MONGO).then(() => {
+  console.log('Connected to MongoDB');
+}).catch(err => console.error('Mongo error', err));
+
+app.get('/api/health', (req, res) => res.json({ ok: true }));
+
+app.post('/api/invoices', async (req, res) => {
+  try {
+    const { customerName, date, currency, items } = req.body;
+
+    // compute totals if not provided
+    let subtotal = 0;
+    let taxTotal = 0;
+    const processed = items.map(it => {
+      const qty = Number(it.qty || 0);
+      const price = Number(it.price || 0);
+      const tax = Number(it.tax || 0);
+      const lineSubtotal = qty * price;
+      const taxAmount = +(lineSubtotal * (tax / 100));
+      const total = lineSubtotal + taxAmount;
+      subtotal += lineSubtotal;
+      taxTotal += taxAmount;
+      return {
+        name: it.name || '',
+        qty,
+        price,
+        tax,
+        subtotal: +lineSubtotal,
+        taxAmount: +taxAmount,
+        total: +total
+      };
+    });
+
+    const invoice = new Invoice({
+      customerName,
+      date: date ? new Date(date) : new Date(),
+      currency: currency || 'INR',
+      items: processed,
+      subtotal: +subtotal,
+      taxTotal: +taxTotal,
+      total: +(subtotal + taxTotal)
+    });
+
+    await invoice.save();
+    res.json({ id: invoice._id });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.get('/api/invoices/:id', async (req, res) => {
+  try {
+    const inv = await Invoice.findById(req.params.id).lean();
+    if (!inv) return res.status(404).json({ error: 'Not found' });
+    res.json(inv);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => console.log('Server listening on', PORT));
+
+
+           #client/src/components/api.js
+         
+
+import axios from 'axios'
+
+const API = axios.create({ baseURL: 'http://localhost:4000/api' })
+
+export default {
+  createInvoice: async (payload) => {
+    const r = await API.post('/invoices', payload)
+    return r.data
+  },
+  getInvoice: async (id) => {
+    const r = await API.get(`/invoices/${id}`)
+    return r.data
+  }
+}
+
+
+            #client/src/components/App.jsx
+
+import React from 'react'
+import { Routes, Route, Link, useNavigate } from 'react-router-dom'
+import CreateInvoice from './components/CreateInvoice'
+import PreviewInvoice from './components/PreviewInvoice'
+
+export default function App() {
+  const navigate = useNavigate()
+  return (
+    <div className="app">
+      <header className="topbar">
+        <button className="create-btn" onClick={() => navigate('/create')}>Create Invoice</button>
+      </header>
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/create" element={<CreateInvoice />} />
+          <Route path="/preview/:id" element={<PreviewInvoice />} />
+        </Routes>
+      </main>
+    </div>
+  )
+}
+
+function Home() {
+  return (
+    <div className="center">
+      <h2>Welcome</h2>
+      <p>Click "Create Invoice" to start a blank invoice.</p>
+    </div>
+  )
+}
+
+
+
+                   #client/src/components/main.jsx
+
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import App from './App'
+import './styles.css'
+
+createRoot(document.getElementById('root')).render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+)
+
+
+                     #client/src/components/styles.css
+
+body { font-family: Arial, sans-serif; margin: 0; color: #222 }
+.topbar { background: #f8f9fb; padding: 12px 20px; border-bottom: 1px solid #eee }
+.create-btn { padding: 8px 12px; border-radius: 6px }
+.container { padding: 20px; max-width: 900px; margin: 20px auto; background: #fff }
+.field { margin-bottom: 12px }
+.field.small { display: inline-block; width: 200px; margin-right: 12px }
+.field label { display: block; font-size: 13px; margin-bottom: 6px }
+.field input, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px }
+.table { border: 1px solid #eee; padding: 10px }
+.thead { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 8px; font-weight: bold; padding: 6px 0 }
+.tr { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 8px; padding: 8px 0 }
+.tr input { width: 100%; }
+.add { margin-top: 10px; }
+.totals { margin-top: 12px; font-weight: bold }
+.actions { margin-top: 16px }
+.actions button { margin-right: 8px; padding: 8px 12px }
+.primary { background: #1f6feb; color: #fff; border: none }
+.preview .inv-header { display: flex; justify-content: space-between; margin-bottom: 12px }
+.inv-table { width: 100%; border-collapse: collapse }
+.inv-table th, .inv-table td { border: 1px solid #eee; padding: 8px }
+.summary { margin-top: 12px; font-size: 16px }
+.center { text-align: center; padding: 40px }
+
+
+                        #client/src/index.html
+
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Invoice</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+
+                    #client/src/vite.config.js  
+
+
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    port: 3000
+  }
+})
+                          
